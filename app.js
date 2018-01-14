@@ -1,10 +1,19 @@
 var fs = require('fs');
 var pdf = require('html-pdf');
 // var html = fs.readFileSync('./cards.html', 'utf8');
-var options = { format: 'Letter', orientation: 'landscape' };
+var options = {
+    format: 'Letter',
+    orientation: 'landscape'
+};
+const mongojs = require('mongojs')
+const db = mongojs('gratitude', ['thankyou']);
+
+db["thankyou"].find(function (err, docs) {
+    mainFun(docs);
+});
 
 
-let arr = [1,4,5,6];
+
 
 const template = cards => `
 <html>
@@ -13,16 +22,16 @@ const template = cards => `
         display: flex;
         flex-direction: row;
         margin-right: 10%;
-       
+
     }
 
     .posy {
-        border: solid 2px black;
-        width: 43%;
+        border: solid 1px black;
+        width: 45%;
         height: 30%;
         padding: 10px;
         float: left;
-      
+
     }
     li{
         margin: 5px;
@@ -38,40 +47,39 @@ const template = cards => `
 <body>
     <div id="main">
     ${cards}
-   
+
     </div>
 </body>
 
 </html>`;
 
-const createCard = () => `
+const createCard = (dat) => `
 <div class="card posy">
 <div class="card-content">
     <h3 class="card-title">General</h3>
     <hr>
     <ol id="bullets">
-        <li>hello</li>
-        <li>hello</li>
-        <li>hello</li>
-        <li>hello</li>
-        <li>hello</li>
+        ${dat.entry}
     </ol>
 </div>
 </div>
 `;
 
-const cardArray = [];
-for(let i = 0; i < 10; i++) {
-    cardArray.push(createCard());
+function mainFun(docs) {
+
+    let temArr = docs.map((val) => {
+        return createCard(val);
+
+    });
+
+
+    const html = template(temArr);
+    renderpdf(html);
 }
-const html = template(cardArray.join(''));
 
-pdf.create(html, options).toFile('./businesscard.pdf', function(err, res) {
-    if (err) return console.log(err);
-    console.log(res); // { filename: '/app/businesscard.pdf' }
-  });
-
-
-
-
-
+function renderpdf(html) {
+    pdf.create(html, options).toFile('./businesscard.pdf', function (err, res) {
+        if (err) return console.log(err);
+        console.log(res); // { filename: '/app/businesscard.pdf' }
+    });
+}
