@@ -22,20 +22,19 @@ const template = cards => `
         display: flex;
         flex-direction: row;
         margin-right: 10%;
-
     }
 
     .posy {
         border: solid 1px black;
-        width: 45%;
-        height: 30%;
-        padding: 10px;
+        width: 42%;
+        height: 31%;
+        padding: 5px;
         float: left;
 
     }
     li{
-        margin: 5px;
-        font-size: 12px;
+        margin: 3px;
+        font-size: 10px;
     }
     h3{
         margin: 5px;
@@ -47,39 +46,63 @@ const template = cards => `
 <body>
     <div id="main">
     ${cards}
-
     </div>
 </body>
 
 </html>`;
 
-const createCard = (dat) => `
+const createCard = (block) => `
 <div class="card posy">
 <div class="card-content">
     <h3 class="card-title">General</h3>
     <hr>
-    <ol id="bullets">
-        ${dat.entry}
+    <ol>
+        ${block}
     </ol>
 </div>
+
 </div>
 `;
 
+const liEntry = (li) => `
+<li> ${li} </li>
+`;
+
 function mainFun(docs) {
-
-    let temArr = docs.map((val) => {
-        return createCard(val);
-
+    const liArr = docs.map(val => val.entry);
+    console.log(liArr.length);
+    const fiveLiArr = [];
+    while (liArr.length > 0) {
+        let tempArr = []
+        for (let i = 0; i < 5; i++) {
+            tempArr.push(liArr.splice(randNum(liArr.length), 1).join(''));
+        }
+        fiveLiArr.push(tempArr);
+    }
+    console.log(fiveLiArr);
+    
+    const liTempl = fiveLiArr.map((val, index) => {
+        let tval = '';
+        for (let i = 0; i < 5; i++){
+            tval += liEntry(val[i]);
+    //     return createCard(liTempl);
+        }
+        return createCard(tval);
     });
+    console.log(liTempl);
 
-
-    const html = template(temArr);
+    const html = template(liTempl);
     renderpdf(html);
 }
 
+function randNum(arrlen) {
+    return Math.floor(Math.random() * arrlen);
+
+}
+
 function renderpdf(html) {
-    pdf.create(html, options).toFile('./businesscard.pdf', function (err, res) {
+    pdf.create(html, options).toFile('./thanksyou.pdf', function (err, res) {
         if (err) return console.log(err);
-        console.log(res); // { filename: '/app/businesscard.pdf' }
+        console.log(res);
     });
 }
