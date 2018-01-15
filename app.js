@@ -26,8 +26,8 @@ const template = cards => `
 
     .posy {
         border: solid 1px black;
-        width: 42%;
-        height: 31%;
+        width: 37%;
+        height: 32%;
         padding: 5px;
         float: left;
 
@@ -45,22 +45,51 @@ const template = cards => `
 
 <body>
     <div id="main">
-    ${cards}
+        ${cards}  
+        <div class="card posy">
+            <div class="card-content">
+                <h3 class="card-title">Night (slip)</h3>
+                <hr>
+                <ol>
+                    <li> I am thankful for God's mercy and forgiveness</li>
+                    <li> I am thankful for God's patience with me' </li>
+                    <li> I am thankful for God removing my desire for alcohol </li>
+                    <li> I am thankful for the progess God has given to me in knowledge of sexuality </li>
+                  
+                </ol>
+            </div>   
+        </div>
+        <div class="card posy">
+            <div class="card-content">
+                <h3 class="card-title">Night</h3>
+                <hr>
+                <ol>
+                    <li> I am SO thankful for the grace of a day without masturbation</li>
+                    <li> I am thankful for my siblings college experience </li>
+                    <li> I am thankful for God removing my desire for alcohol </li>
+                    <li> I am thankful for the progess God has given to me in knowledge of sexuality </li>
+                    <li> I am thankful for music </li>
+                
+                </ol>
+            </div>
+        </div> 
+       
     </div>
+       
+ 
 </body>
 
 </html>`;
 
 const createCard = (block) => `
 <div class="card posy">
-<div class="card-content">
-    <h3 class="card-title">General</h3>
-    <hr>
-    <ol>
-        ${block}
-    </ol>
-</div>
-
+    <div class="card-content">
+        <h3 class="card-title">General</h3>
+        <hr>
+        <ol>
+            ${block}
+        </ol>
+    </div>
 </div>
 `;
 
@@ -70,7 +99,6 @@ const liEntry = (li) => `
 
 function mainFun(docs) {
     const liArr = docs.map(val => val.entry);
-    console.log(liArr.length);
     const fiveLiArr = [];
     while (liArr.length > 0) {
         let tempArr = []
@@ -79,7 +107,7 @@ function mainFun(docs) {
         }
         fiveLiArr.push(tempArr);
     }
-    console.log(fiveLiArr);
+
     
     const liTempl = fiveLiArr.map((val, index) => {
         let tval = '';
@@ -89,7 +117,7 @@ function mainFun(docs) {
         }
         return createCard(tval);
     });
-    console.log(liTempl);
+
 
     const html = template(liTempl);
     renderpdf(html);
