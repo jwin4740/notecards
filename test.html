@@ -1,21 +1,3 @@
-var fs = require('fs');
-var pdf = require('html-pdf');
-// var html = fs.readFileSync('./cards.html', 'utf8');
-var options = {
-    format: 'Letter',
-    orientation: 'portrait'
-};
-const mongojs = require('mongojs')
-const db = mongojs('gratitude', ['thankyou']);
-
-db["thankyou"].find(function (err, docs) {
-    mainFun(docs);
-});
-
-
-
-
-const template = cards => `
 <html>
 <style>
     #main {
@@ -29,13 +11,9 @@ const template = cards => `
     .posy {
         border: solid 1px black;
         float: left;
-        width: 26%;
-        height: 23.45%;
+        width: 25%;
+        height: 23.4%;
         padding: 5px;
-    }
-
-    ol{
-        padding-left: 15px;
     }
     li{
         margin: 2px;
@@ -68,19 +46,6 @@ const template = cards => `
         </div>
         <div class="card posy">
         <div class="card-content">
-            <h3 class="card-title">BLHASTED</h3>
-            <hr>
-            <ol>
-                <li> puzzle</li>
-                <li> violin </li>
-                <li> guitar </li>
-                <li> bowling </li>
-               
-            </ol>
-        </div>
-    </div>
-        <div class="card posy">
-        <div class="card-content">
             <h3 class="card-title">RULES</h3>
             <hr>
             <ol>
@@ -109,59 +74,4 @@ const template = cards => `
  
 </body>
 
-</html>`;
-
-const createCard = (block) => `
-<div class="card posy">
-    <div class="card-content">
-        <h3 class="card-title">General</h3>
-        <hr>
-        <ol>
-            ${block}
-        </ol>
-    </div>
-</div>
-`;
-
-const liEntry = (li) => `
-<li> ${li} </li>
-`;
-
-function mainFun(docs) {
-    const liArr = docs.map(val => val.entry);
-    const fiveLiArr = [];
-    while (liArr.length > 0) {
-        let tempArr = []
-        for (let i = 0; i < 5; i++) {
-            tempArr.push(liArr.splice(randNum(liArr.length), 1).join(''));
-        }
-        fiveLiArr.push(tempArr);
-    }
-
-    
-    const liTempl = fiveLiArr.map((val, index) => {
-        let tval = '';
-        for (let i = 0; i < 4; i++){
-            tval += liEntry(val[i]);
-    //     return createCard(liTempl);
-        }
-        return createCard(tval);
-    });
-
-
-    const html = template(liTempl);
-    renderpdf(html);
-}
-
-function randNum(arrlen) {
-    return Math.floor(Math.random() * arrlen);
-
-}
-
-function renderpdf(html) {
-    pdf.create(html, options).toFile('./thankyous.pdf', function (err, res) {
-        if (err) return console.log(err);
-        console.log(res);
-    });
-}
-
+</html>
